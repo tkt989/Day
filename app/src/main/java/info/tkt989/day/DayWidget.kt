@@ -7,6 +7,7 @@ import android.widget.RemoteViews
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Period
+import java.util.*
 
 /**
  * Implementation of App Widget functionality.
@@ -39,21 +40,18 @@ class DayWidget : AppWidgetProvider() {
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int) {
-
-            val widgetText = DayWidgetConfigureActivity.loadTitlePref(context, appWidgetId)
-            // Construct the RemoteViews object
             val views = RemoteViews(context.packageName, R.layout.day_widget)
 
             val app = context.applicationContext as MyApplication
 
             val day = app.dateStore.load(appWidgetId)
             day?.let {
+                val random = Random()
                 val now = DateTime.now()
                 val days = Days.daysBetween(now, day.date)
-                views.setTextViewText(R.id.appwidget_text, (days.days+1).toString())
+                views.setTextViewText(R.id.days, (days.days+1).toString() + " " + random.nextInt().toString())
             }
 
-            // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }

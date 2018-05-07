@@ -62,7 +62,7 @@ class DayWidgetConfigureActivity : Activity(), DatePickerDialog.OnDateSetListene
         }
 
         add.setOnClickListener {
-            val day = Day(mAppWidgetId, dateTime)
+            val day = Day(0, "tet", dateTime)
             app.dateStore.save(day)
 
             val resultValue = Intent()
