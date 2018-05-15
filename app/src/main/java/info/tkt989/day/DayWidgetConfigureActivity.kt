@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import info.tkt989.day.model.Day
 import kotlinx.android.synthetic.main.day_widget_configure.*
 import org.joda.time.DateTime
 import org.joda.time.MutableDateTime
@@ -62,7 +63,7 @@ class DayWidgetConfigureActivity : Activity(), DatePickerDialog.OnDateSetListene
         }
 
         add.setOnClickListener {
-            val day = Day(0, "tet", dateTime)
+            val day = Day("tet", dateTime)
             app.dateStore.save(day)
 
             val resultValue = Intent()
