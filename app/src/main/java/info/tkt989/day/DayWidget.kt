@@ -44,7 +44,7 @@ class DayWidget : AppWidgetProvider() {
 
             val appWidgetDay = app.dateStore.db.appWidgetDayDao().getById(appWidgetId)
             val day = appWidgetDay?.let {
-                app.dateStore.db.dayDao().findByDayId(appWidgetDay.dayId)
+                app.dateStore.db.dayDao().findById(appWidgetDay.dayId)
             }
 
             day?.let {

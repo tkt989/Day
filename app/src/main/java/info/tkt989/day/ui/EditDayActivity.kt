@@ -1,12 +1,14 @@
 package info.tkt989.day.ui
 
+import android.appwidget.AppWidgetManager
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import info.tkt989.day.MyApplication
-import info.tkt989.day.R
-import info.tkt989.day.addTextChangedListener
+import info.tkt989.day.*
+import info.tkt989.day.model.Day
 import kotlinx.android.synthetic.main.activity_edit_day.*
 import org.joda.time.DateTime
 import java.util.*
@@ -31,6 +33,14 @@ class EditDayActivity : AppCompatActivity() {
             }
         }
 
+        intent?.apply {
+            (getSerializableExtra(DAY) as? Day)?.let {
+                titleText.setText(it.title)
+                viewModel.id.value = it.id
+                viewModel.date.value = it.date
+            }
+        }
+
         dateText.setOnClickListener {
             val date = viewModel.date.value ?: return@setOnClickListener
 
@@ -46,7 +56,25 @@ class EditDayActivity : AppCompatActivity() {
         titleText.addTextChangedListener { viewModel.title.postValue(it) }
 
         doneButton.setOnClickListener {
-            if (viewModel.save()) finish()
+            if (viewModel.save()) {
+                viewModel.id.value?.let {
+                    val idList = (application as? MyApplication)?.dateStore?.db?.appWidgetDayDao()?.findByDayId(viewModel.id.value!!)
+                    idList?.forEach {
+                        DayWidget.updateAppWidget(this, AppWidgetManager.getInstance(this), it.appWidgetId)
+                    }
+                }
+                finish()
+            }
+        }
+    }
+
+    companion object {
+        private val DAY = "DAY"
+
+        fun createIntent(context: Context, day: Day): Intent {
+            val intent = Intent(context, EditDayActivity::class.java)
+            intent.putExtra(DAY, day)
+            return intent
         }
     }
 }

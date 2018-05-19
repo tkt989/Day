@@ -12,6 +12,7 @@ import info.tkt989.day.MyApplication
 
 import info.tkt989.day.R
 import info.tkt989.day.model.Day
+import info.tkt989.day.observe
 import kotlinx.android.synthetic.main.fragment_day_list.*
 import javax.inject.Inject
 

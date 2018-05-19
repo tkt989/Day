@@ -13,10 +13,12 @@ class EditDayViewModel : ViewModel() {
     lateinit var dayDao: DayDao
 
     var validation: MutableLiveData<Map<Any, String>> = MutableLiveData()
+    var id: MutableLiveData<Long?> = MutableLiveData()
     var title: MutableLiveData<String> = MutableLiveData()
     var date: MutableLiveData<DateTime> = MutableLiveData()
 
     init {
+        id.value = null
         title.value = ""
         date.value = DateTime.now().withTimeAtStartOfDay().withTimeAtStartOfDay()
     }
@@ -26,8 +28,12 @@ class EditDayViewModel : ViewModel() {
             return false
         }
 
-        val day = Day(title.value!!, date.value!!)
-        dayDao.insert(day)
+        val day = id.value?.let {
+            dayDao.findById(it)
+        } ?: Day(title.value!!, date.value!!)
+        day.title = title.value!!
+        day.date = date.value!!
+        dayDao.save(day)
         return true
     }
 

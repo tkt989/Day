@@ -8,7 +8,6 @@ class DateStore(val db: AppDatabase) {
     val dao = db.dayDao()
 
     fun save(day: Day) {
-        dao.insert(day)
     }
 
     fun load(appWidgetId: Int): Day? {

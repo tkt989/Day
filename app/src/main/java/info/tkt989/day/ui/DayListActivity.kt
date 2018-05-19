@@ -7,10 +7,6 @@ import android.os.Bundle
 import info.tkt989.day.R
 import info.tkt989.day.model.Day
 
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, observer: ((T?) -> Unit)) {
-    this.observe(owner, android.arch.lifecycle.Observer<T>(observer))
-}
-
 class DayListActivity : AppCompatActivity(), DayListFragment.DayListFragmentListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,5 +18,6 @@ class DayListActivity : AppCompatActivity(), DayListFragment.DayListFragmentList
     }
 
     override fun onDayClick(day: Day) {
+        startActivity(EditDayActivity.createIntent(this, day))
     }
 }
