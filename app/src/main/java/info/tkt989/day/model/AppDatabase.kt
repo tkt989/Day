@@ -4,8 +4,9 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 
-@Database(version = 1, entities = [Day::class], exportSchema = false)
+@Database(version = 1, entities = [Day::class, AppWidgetDay::class], exportSchema = false)
 @TypeConverters(DateTimeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dayDao(): DayDao
+    abstract fun appWidgetDayDao(): AppWidgetDayDao
 }

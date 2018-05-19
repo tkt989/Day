@@ -6,8 +6,6 @@ import android.content.Context
 import android.widget.RemoteViews
 import org.joda.time.DateTime
 import org.joda.time.Days
-import org.joda.time.Period
-import java.util.*
 
 /**
  * Implementation of App Widget functionality.
@@ -24,7 +22,7 @@ class DayWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
-            DayWidgetConfigureActivity.deleteTitlePref(context, appWidgetId)
+            (context.applicationContext as? MyApplication)?.dateStore?.db?.appWidgetDayDao()?.deleteById(appWidgetId)
         }
     }
 
@@ -44,12 +42,17 @@ class DayWidget : AppWidgetProvider() {
 
             val app = context.applicationContext as MyApplication
 
-            val day = app.dateStore.load(appWidgetId)
+            val appWidgetDay = app.dateStore.db.appWidgetDayDao().getById(appWidgetId)
+            val day = appWidgetDay?.let {
+                app.dateStore.db.dayDao().findByDayId(appWidgetDay.dayId)
+            }
+
             day?.let {
-                val random = Random()
-                val now = DateTime.now()
-                val days = Days.daysBetween(now, day.date)
-                views.setTextViewText(R.id.days, (days.days+1).toString() + " " + random.nextInt().toString())
+                val now = DateTime.now().withTimeAtStartOfDay()
+                val diff = Days.daysBetween(now, day.date).days
+
+                views.setTextViewText(R.id.titleText, day.title)
+                views.setTextViewText(R.id.daysText, diff.toString())
             }
 
             appWidgetManager.updateAppWidget(appWidgetId, views)

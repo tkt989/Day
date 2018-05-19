@@ -39,6 +39,7 @@ class EditDayActivity : AppCompatActivity() {
             dialog.setOnDateSetListener { _, year, month, day ->
                 viewModel.date.value = DateTime(year, month + 1, day, 0, 0)
             }
+            dialog.vibrate(false)
             dialog.show(fragmentManager, "dialog")
         }
 
